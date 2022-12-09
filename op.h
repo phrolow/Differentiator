@@ -39,6 +39,7 @@ DEF_CMD(DIV, 4, '/', {
     rch = nod->children[RIGHT];
     lch = nod->children[LEFT];
     node *denom_mul = (node *) malloc(sizeof(node));
+    printf("pizda");
     node *sub = (node *) malloc(sizeof(node));
     node *new_mul = (node *) malloc(sizeof(node));
     node *cpy = (node *) malloc(sizeof(node));

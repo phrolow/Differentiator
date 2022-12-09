@@ -29,6 +29,7 @@ typedef enum TYPE {
 } type;
 
 typedef enum SIDE {
+    ROOT = -1,
     LEFT = 0,
     RIGHT = 1,
 } side;

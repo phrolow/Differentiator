@@ -86,8 +86,6 @@ static TREE_ERROR nodeverify(node *nod) {
 
     CHECK(nod->type != VAR || nod->value.name, NULL_NAME, "null name")
 
-    PRINT(nod);
-
     if(nod->children[0]) {
         TREE_ERROR le = nodeverify(nod->children[LEFT]);
         TREE_ERROR re = nodeverify(nod->children[RIGHT]);

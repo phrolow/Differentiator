@@ -5,23 +5,23 @@
         nod->value.op = name;           \
         break;
 
-static int getConstOrVar(node *nod, const char *start) {
+static int getConstOrVar(node *nod, const char *start, node *parent, side side) {
+    value value;
+
     start++;
 
     if(isalpha(*start)) {
-        nod->type = VAR;
-
         size_t len = strchr(start, ')') - start;
 
         char *name = (char*)calloc(len + 1, sizeof(char));
 
         strncpy(name, start, len);
 
-        nod->value.name = name;
+        value.name = name;
+
+        NodeCtor(nod, parent, VAR, value, side);
     }
     else if(isdigit(*start)) {
-        nod->type = CONST;
-
         const char *ptr = start;
         int val = 0;
 
@@ -30,7 +30,9 @@ static int getConstOrVar(node *nod, const char *start) {
             ptr++;
         }
 
-        nod->value.val = val;
+        value.val = val;
+
+        NodeCtor(nod, parent, CONST, value, side);
     }
     else
         return INVALID_EXPRESSION;
@@ -57,16 +59,19 @@ static const char* searchclosep(const char *ptr) {
     return ptr - 1;
 }
 
-static node *getNode(const char *start, const char *stop) {
+static node *getNode(const char *start, const char *stop, node *parent, side side) {
     node *nod = (node*) malloc(sizeof(node));
 
     const char *closep = searchclosep(start + 1);
 
     if(closep == stop) {
-        getConstOrVar(nod, start);
+        getConstOrVar(nod, start, parent, side);
     }
     else {
-        nod->type = OP;
+        value op;
+        op.op = NOT_DEFINED_OP;
+
+        NodeCtor(nod, parent, OP, op, side);
 
         switch (*(closep + 1)) {
             #include "op.h"
@@ -78,13 +83,13 @@ static node *getNode(const char *start, const char *stop) {
 
         printf("%d %d\n", nod->type, nod->value);
 
-        nod->children[LEFT] = getNode(start + 1, closep);
-        nod->children[RIGHT] = getNode(closep + 2, stop - 1);
+        nod->children[LEFT] = getNode(start + 1, closep, nod, LEFT);
+        nod->children[RIGHT] = getNode(closep + 2, stop - 1, nod, RIGHT);
     }
 
     return nod;
 }
 
 void ReadExpression(tree *expression, const char *txt) {
-    expression->root = getNode(txt, txt + strlen(txt) - 1);
+    expression->root = getNode(txt, txt + strlen(txt) - 1, NULL, ROOT);
 }
