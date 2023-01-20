@@ -50,7 +50,7 @@ static void nodedump(const node *node, size_t *nNode, FILE *fp) {
 
     size_t current_number_of_node = *nNode;
 
-    if (node->children[0]) {
+    if (CheckChildren(node)) {
         PrintEdge(current_number_of_node, ++(*nNode), LEFT_COLOR, fp);
         nodedump(node->children[LEFT], nNode, fp);
 

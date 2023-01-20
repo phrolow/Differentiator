@@ -5,7 +5,7 @@ void TreeCtor(tree *tree, node *root) {
 }
 
 static void nodedtor_(node *node) {
-    if(node->children[0]) {
+    if(CheckChildren(node)) {
         nodedtor_(node->children[0]);
         nodedtor_(node->children[1]);
     }

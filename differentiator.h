@@ -37,7 +37,7 @@ typedef enum SIDE {
 union value {
     op op;
     int val;
-    const char *name;
+    char *name;
     void* no_val;
 };
 
@@ -56,6 +56,7 @@ enum EXPRESSION_ERROR {
 };
 
 const size_t BUFSIZE = 0x100;
+const size_t NAMESIZE = 0x10;
 
 typedef struct Node {
     struct Node *parent;
@@ -93,7 +94,11 @@ void SubTreeDtor(node *node);
 
 int NodeCtor(node *new_node, node *parent, type node_type, value node_value, side side);
 
-void NodeDtor(node *node);
+void NodeDtor(node *nod);
+
+int NodeCheck(node *nod);
+
+int CheckChildren(const node *nod);
 
 int checkfile(char *path);
 
@@ -124,6 +129,8 @@ int CheckDiv0(node *node);
 #ifdef DEBUG
 
 #define PRINT(n) printf("%d %d\n", (n)->type, (n)->value)
+
+const int WRONG = 0xBAD;
 
 const char* const    PNGPATH = "tree.png";
 const char* const    HTMLPATH = "log.html";

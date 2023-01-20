@@ -3,24 +3,79 @@
 void Simplify(tree *expression) {
     TreeVerify(expression);
 
-    while(CalcConst(expression) || NeutralElems(expression));
+    while(CalcConst(expression) + NeutralElems(expression));
+}
+
+static void calcnode(node *nod) {
+    PRINT(nod);
+
+    int a = nod->children[LEFT]->value.val,
+        b = nod->children[RIGHT]->value.val,
+        res = 0;
+
+    switch (nod->value.op) {
+        case ADD:
+            res = a + b;
+            break;
+        case SUB:
+            res = a - b;
+            break;
+        case MUL:
+            res = a * b;
+            break;
+        case DIV:
+            res = a / b;
+            break;
+        default:
+            res = WRONG;
+            break;
+    }
+
+    NodeDtor(nod->children[0]);
+    NodeDtor(nod->children[1]);
+
+    nod->type = CONST;
+    nod->value.val = res;
+}
+
+static int calcconst(node *nod) {
+    if(nod->type == CONST)
+        return 1;
+
+    if(nod->type == VAR)
+        return 0;
+
+    if(calcconst(nod->children[0]) * calcconst(nod->children[1])) {
+        calcnode(nod);
+
+        return 1;
+    }
+
+    return 0;
 }
 
 int CalcConst(tree *expression) {
     TreeVerify(expression);
 
+    calcconst(expression->root);
+
     return 0;
 }
 
 static int neutr_elts(node *nod) {
-    if(!nod || nod->type != OP)
+    if(!(NodeCheck(nod) && nod->type == OP))
         return 0;
 
     if(CheckDiv0(nod)) {
         //наебнуть
     }
 
-    return FixMul0(nod) + FixMul1(nod) + FixAdd0(nod) + FixSub0(nod) + Fix0Div(nod) + neutr_elts(nod->children[LEFT]) + neutr_elts(nod->children[RIGHT]);
+    return FixMul0(nod)
+        || FixMul1(nod)
+        || FixAdd0(nod)
+        || FixSub0(nod)
+        || Fix0Div(nod)
+        || neutr_elts(nod->children[LEFT]) + neutr_elts(nod->children[RIGHT]);
 }
 
 int NeutralElems(tree *expression) {
@@ -55,7 +110,10 @@ int FixMul1(node *node) {
     for(int i = 0; i < 2; i++) {
         if(node->children[i]->type == CONST && node->children[i]->value.val == 1) {
             node->children[!i]->parent = node->parent;
-            node->parent->children[node->children[!i]->side] = node->children[!i];
+            node->parent->children[node->side] = node->children[!i];
+            node->children[!i]->side = node->side;
+
+            node->parent = NULL;
 
             NodeDtor(node->children[i]);
             NodeDtor(node);
@@ -75,7 +133,10 @@ int FixAdd0(node *node) {
     for(int i = 0; i < 2; i++) {
         if(node->children[i]->type == CONST && node->children[i]->value.val == 0) {
             node->children[!i]->parent = node->parent;
-            node->parent->children[node->children[!i]->side] = node->children[!i];
+            node->parent->children[node->side] = node->children[!i];
+            node->children[!i]->side = node->side;
+
+            node->parent = NULL;
 
             NodeDtor(node->children[i]);
             NodeDtor(node);
@@ -92,16 +153,17 @@ int FixSub0(node *node) {
         return 0;
 
 
-    for(int i = 0; i < 2; i++) {
-        if(node->children[i]->type == CONST && node->children[i]->value.val == 0) {
-            node->children[!i]->parent = node->parent;
-            node->parent->children[node->children[!i]->side] = node->children[!i];
+    if(node->children[1]->type == CONST && node->children[1]->value.val == 0) {
+        node->children[0]->parent = node->parent;
+        node->parent->children[node->side] = node->children[0];
+        node->children[0]->side = node->side;
 
-            NodeDtor(node->children[i]);
-            NodeDtor(node);
+        node->parent = NULL;
 
-            return 1;
-        }
+        NodeDtor(node->children[1]);
+        NodeDtor(node);
+
+        return 1;
     }
 
     return 0;
@@ -111,7 +173,7 @@ int Fix0Div(node *node) {
     if(node->value.op != DIV)
         return 0;
 
-    if(node->children[LEFT]->type == CONST && node->children[LEFT]->value.val == 0) {
+    if(CheckChildren(node) && node->children[LEFT]->type == CONST && node->children[LEFT]->value.val == 0) {
         SubTreeDtor(node->children[RIGHT]);
         NodeDtor(node->children[RIGHT]);
 
@@ -125,7 +187,7 @@ int Fix0Div(node *node) {
 }
 
 int CheckDiv0(node *node) {
-    if(node->value.op != DIV)
+    if(node->value.op != DIV || !CheckChildren(node))
         return 0;
 
     if(node->children[RIGHT]->type == CONST && node->children[RIGHT]->value.val == 0) {

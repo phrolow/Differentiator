@@ -19,13 +19,13 @@ int main(int argc, char **argv) {
 
     Diff(&expression);
 
-    TreeDump(&expression);
+//    Simplify(&expression);
 
-    Simplify(&expression);
+//    CalcConst(&expression);
+
+    TreeDump(&expression);
 
 //    PrintExpression(&res);
-
-    TreeDump(&expression);
 
     TreeDtor(&expression);
 
