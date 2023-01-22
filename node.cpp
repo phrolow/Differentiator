@@ -61,3 +61,8 @@ int NodeCheck(node *nod) {
 int CheckChildren(const node *nod) {
     return nod->children[0] && nod->children[1];
 }
+
+void NodeConnect(node *parent, node *child) {
+    child->parent = parent;
+    parent->children[child->side] = child;
+}

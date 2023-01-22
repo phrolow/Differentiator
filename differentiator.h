@@ -36,7 +36,7 @@ typedef enum SIDE {
 
 union value {
     op op;
-    int val;
+    double val;
     char *name;
     void* no_val;
 };
@@ -100,9 +100,11 @@ int NodeCheck(node *nod);
 
 int CheckChildren(const node *nod);
 
+void NodeConnect(node *parent, node *child);
+
 int checkfile(char *path);
 
-void ReadExpression(tree *expression, const char *txt);
+tree * ReadExpression(const char *txt);
 
 void Diff(tree *expression);
 

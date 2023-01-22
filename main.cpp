@@ -11,23 +11,23 @@ int main(int argc, char **argv) {
         exit(2);
     }
 
-    tree expression = {};
+    tree *expression;
 
     struct text txt = textFromFile(argv[1]);
 
-    ReadExpression(&expression, txt.content);
+    expression = ReadExpression(txt.content);
 
-    Diff(&expression);
+//    Diff(expression);
 
 //    Simplify(&expression);
 
 //    CalcConst(&expression);
 
-    TreeDump(&expression);
+    TreeDump(expression);
 
 //    PrintExpression(&res);
 
-    TreeDtor(&expression);
+    TreeDtor(expression);
 
     return 0;
 }
