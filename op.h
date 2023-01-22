@@ -1,14 +1,14 @@
-DEF_CMD(ADD, 1, '+', {
+DEF_CMD(ADD, 1, "+", {
     diff(nod->children[0]);
     diff(nod->children[1]);
 })
 
-DEF_CMD(SUB, 2, '-', {
+DEF_CMD(SUB, 2, "-", {
     diff(nod->children[0]);
     diff(nod->children[1]);
 })
 
-DEF_CMD(MUL, 3, '*', {
+DEF_CMD(MUL, 3, "*", {
     rch = nod->children[RIGHT];
     lch = nod->children[LEFT];
     node *cpy = NodeCopy(nod);
@@ -35,7 +35,7 @@ DEF_CMD(MUL, 3, '*', {
     diff(denom_mul->children[1]);
 })
 
-DEF_CMD(DIV, 4, '/', {
+DEF_CMD(DIV, 4, "/", {
     rch = nod->children[RIGHT];
     lch = nod->children[LEFT];
     node *denom_mul = (node *) malloc(sizeof(node));
@@ -79,6 +79,30 @@ DEF_CMD(DIV, 4, '/', {
     diff(cpy->children[LEFT]);
 })
 
-DEF_CMD(POW, 5, '^', {
+DEF_CMD(POW, 5, "^", {
     printf("huipizda");
+})
+
+DEF_CMD(SIN, 6, "sin", {
+    printf("nahui idi");
+})
+
+DEF_CMD(COS, 7, "cos", {
+    printf("nahui idi");
+})
+
+DEF_CMD(LN, 8, "ln", {
+    printf("nahui idi");
+})
+
+DEF_CMD(SH, 9, "sh", {
+    printf("nahui idi");
+})
+
+DEF_CMD(CH, 10, "ch", {
+    printf("nahui idi");
+})
+
+DEF_CMD(WTF, 0, "\1", {
+    printf("nahui idi");
 })

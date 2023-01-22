@@ -1,7 +1,7 @@
 #include "differentiator.h"
 #define COMMA ,
 
-#define DEF_CMD(name, num, ch, ...) \
+#define DEF_CMD(name, num, ...) \
     case name:                      \
         __VA_ARGS__                 \
         break;

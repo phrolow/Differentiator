@@ -15,7 +15,6 @@
 #define DEF_CMD(name, num, ch, ...) name = num,
 
 typedef enum OP {
-    NOT_DEFINED_OP = 0,
     #include "op.h"
 } op;
 

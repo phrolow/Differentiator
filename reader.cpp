@@ -1,10 +1,5 @@
 #include "differentiator.h"
 
-#define DEF_CMD(name, num, ch, ...)     \
-    case ch:                            \
-        nod->value.op = name;           \
-        break;
-
 #define KILL {                                                      \
     printf("INVALID EXPRESSION: %c must not be there\n", **ptr);    \
                                                                     \
