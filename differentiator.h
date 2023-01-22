@@ -37,7 +37,7 @@ typedef enum SIDE {
 union value {
     op op;
     double val;
-    char *name;
+    char name;
     void* no_val;
 };
 

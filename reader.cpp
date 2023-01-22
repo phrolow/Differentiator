@@ -32,13 +32,60 @@ static node* getN(const char **ptr, side side) {
     return newnode;
 }
 
+static node* getV(const char **ptr, side side) {
+    assert(ptr && *ptr);
+
+    if(isalpha(**ptr)) {
+        char name = **ptr;
+        (*ptr)++;
+
+        node *newnode = (node*) malloc(sizeof(node));
+        NodeCtor(newnode, NULL, VAR, {.name = name}, side);
+
+        return newnode;
+    }
+
+    return getN(ptr, side);
+}
+
+static node* getF(const char **ptr, side side) {
+    assert(ptr && *ptr);
+
+
+}
+
+static node* getPow(const char **ptr, side side) {
+    assert(ptr && *ptr);
+
+    node *left = getP(ptr, side);
+
+    while(**ptr == '^') {
+        left->side = LEFT;
+
+        (*ptr)++;
+
+        node *right = getP(ptr, RIGHT);
+
+        node *nod = (node*) malloc(sizeof(node));
+
+        NodeCtor(nod, NULL, OP, {.op = POW}, side);
+        NodeConnect(nod, left);
+        NodeConnect(nod, right);
+
+        left = nod;
+    }
+
+    return left;
+}
+
 static node* getT(const char **ptr, side side) {
     assert(ptr && *ptr);
 
-    op op;
-    node *left = getP(ptr, side);
+    node *left = getPow(ptr, side);
 
     while(**ptr == '*' || **ptr == '/') {
+        op op;
+
         left->side = LEFT;
 
         if(**ptr == '*')
@@ -48,7 +95,7 @@ static node* getT(const char **ptr, side side) {
 
         (*ptr)++;
 
-        node *right = getP(ptr, RIGHT);
+        node *right = getPow(ptr, RIGHT);
 
         node *nod = (node*) malloc(sizeof(node));
 
@@ -107,7 +154,7 @@ static node* getP(const char **ptr, side side) {
         return nod;
     }
     else
-        return getN(ptr, side);
+        return getV(ptr, side);
 }
 
 static node* getG(const char *expression) {

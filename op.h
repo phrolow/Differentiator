@@ -78,3 +78,7 @@ DEF_CMD(DIV, 4, '/', {
     diff(rch);
     diff(cpy->children[LEFT]);
 })
+
+DEF_CMD(POW, 5, '^', {
+    printf("huipizda");
+})
