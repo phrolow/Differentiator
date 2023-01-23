@@ -1,5 +1,11 @@
 #include "differentiator.h"
 
+#define DEF_CMD(name, num, sign, ...)   \
+    if(streq(*ptr, sign)) {             \
+        op = name;                      \
+        (*ptr) += strlen(sign);         \
+    } else
+
 #define KILL {                                                      \
     printf("INVALID EXPRESSION: %c must not be there\n", **ptr);    \
                                                                     \
@@ -13,7 +19,7 @@ static node* getN(const char **ptr, side side) {
 
     if(!isdigit(**ptr)) KILL
 
-    int val = 0;
+    double val = 0;
     node *newnode = (node*) malloc(sizeof(node));
 
     while(isdigit(**ptr)) {
@@ -22,7 +28,9 @@ static node* getN(const char **ptr, side side) {
         (*ptr)++;
     }
 
-    NodeCtor(newnode, NULL, CONST, {.val = (double) val}, side);
+    NodeCtor(newnode, NULL, CONST, {.val = val}, side);
+
+    printf("%lg\n", newnode->value.val);
 
     return newnode;
 }
@@ -43,10 +51,55 @@ static node* getV(const char **ptr, side side) {
     return getN(ptr, side);
 }
 
+static node* getC(const char **ptr, side side) {
+    assert(ptr && *ptr);
+
+    mconst m;
+
+    if(streq(*ptr, "e")) {
+        m = E;
+
+        (*ptr)++;
+    } else if(streq(*ptr, "pi")) {
+        m = PI;
+
+        (*ptr) += 2;
+    }
+    else
+        return getV(ptr, side);
+
+    node *nod = (node*) malloc(sizeof(node));
+    NodeCtor(nod, NULL, MATH_CONST, {.m = m}, side);
+
+    return nod;
+}
+
 static node* getF(const char **ptr, side side) {
     assert(ptr && *ptr);
 
+    op op = WTF;
 
+    #include "op.h"
+        ;
+    #undef DEF_CMD
+
+    node *left = getC(ptr, side);
+
+    if(op == WTF)
+        return left;
+
+    left->side = LEFT;
+
+    node *right = (node*) malloc(sizeof(node));
+    node *nod = (node*) malloc(sizeof(node));
+
+    NodeCtor(right, nod, NOT_DEFINED, {.no_val = NULL}, RIGHT);
+
+    NodeCtor(nod, NULL, OP, {.op = op}, side);
+    NodeConnect(nod, left);
+    NodeConnect(nod, right);
+
+    return nod;
 }
 
 static node* getPow(const char **ptr, side side) {
@@ -149,7 +202,7 @@ static node* getP(const char **ptr, side side) {
         return nod;
     }
     else
-        return getV(ptr, side);
+        return getF(ptr, side);
 }
 
 static node* getG(const char *expression) {

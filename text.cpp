@@ -87,3 +87,15 @@ int checkfile(char* path) {
 
     return 0;
 }
+
+int streq(const char *txt, const char *str) {
+    int len = strlen(str);
+
+    for(int i = 0; i < len; i++) {
+        if(*(txt + i) != *(str + i)) {
+            return 0;
+        }
+    }
+
+    return 1;
+}

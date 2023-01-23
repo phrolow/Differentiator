@@ -43,6 +43,9 @@ static void nodedump(const node *node, size_t *nNode, FILE *fp) {
         case VAR:
             PrintNode(node, nNode, VAR_COLOR, fp);
             break;
+        case MATH_CONST:
+            PrintNode(node, nNode, MCONST_COLOR, fp);
+            break;
         default:
             PrintNode(node, nNode, ERR_COLOR, fp);
             break;
@@ -82,7 +85,7 @@ static TREE_ERROR nodeverify(node *nod) {
 
     CHECK(nod->type != NOT_DEFINED, UNDEFINED_TYPE, "undefined type")
 
-    CHECK(nod->type != OP || nod->value.op != NOT_DEFINED_OP, UNDEFINED_OP, "not defined op")
+    CHECK(nod->type != OP || nod->value.op != WTF, UNDEFINED_OP, "not defined op")
 
     CHECK(nod->type != VAR || nod->value.name, NULL_NAME, "null name")
 
@@ -107,4 +110,6 @@ TREE_ERROR TreeVerify(tree *tree) {
     #endif
 
     //return nodeverify(tree->root);
+
+    return TREE_OK;
 }

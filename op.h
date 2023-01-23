@@ -103,6 +103,6 @@ DEF_CMD(CH, 10, "ch", {
     printf("nahui idi");
 })
 
-DEF_CMD(WTF, 0, "\1", {
+DEF_CMD(WTF, 0, "", {
     printf("nahui idi");
 })

@@ -12,7 +12,7 @@
 #define DEBUG
 //#define FATAL_VERIFY
 
-#define DEF_CMD(name, num, ch, ...) name = num,
+#define DEF_CMD(name, num, sign, ...) name = num,
 
 typedef enum OP {
     #include "op.h"
@@ -25,7 +25,14 @@ typedef enum TYPE {
     OP,
     VAR,
     CONST,
+    MATH_CONST,
 } type;
+
+typedef enum MCONST {
+    IDK = 0,
+    E,
+    PI,
+} mconst;
 
 typedef enum SIDE {
     ROOT = -1,
@@ -37,6 +44,7 @@ union value {
     op op;
     double val;
     char name;
+    mconst m;
     void* no_val;
 };
 
@@ -103,6 +111,8 @@ void NodeConnect(node *parent, node *child);
 
 int checkfile(char *path);
 
+int streq(const char *txt, const char *str);
+
 tree * ReadExpression(const char *txt);
 
 void Diff(tree *expression);
@@ -142,6 +152,7 @@ const size_t COLORLEN = 8;
 const char  OP_COLOR[COLORLEN] = "#F4CF72",
         CONST_COLOR[COLORLEN] = "#71DCC1",
         VAR_COLOR[COLORLEN] = "#F49872",
+        MCONST_COLOR[COLORLEN] = "#B0C4DE",
         ERR_COLOR[COLORLEN] = "#808080",
         RIGHT_COLOR[COLORLEN] = "#7173DC",
         LEFT_COLOR[COLORLEN] = "#CD5C5C";
