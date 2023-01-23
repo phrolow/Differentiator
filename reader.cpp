@@ -83,7 +83,7 @@ static node* getF(const char **ptr, side side) {
         ;
     #undef DEF_CMD
 
-    node *left = getC(ptr, side);
+    node *left = getP(ptr, side);
 
     if(op == WTF)
         return left;
@@ -105,14 +105,14 @@ static node* getF(const char **ptr, side side) {
 static node* getPow(const char **ptr, side side) {
     assert(ptr && *ptr);
 
-    node *left = getP(ptr, side);
+    node *left = getF(ptr, side);
 
     while(**ptr == '^') {
         left->side = LEFT;
 
         (*ptr)++;
 
-        node *right = getP(ptr, RIGHT);
+        node *right = getF(ptr, RIGHT);
 
         node *nod = (node*) malloc(sizeof(node));
 
@@ -202,7 +202,7 @@ static node* getP(const char **ptr, side side) {
         return nod;
     }
     else
-        return getF(ptr, side);
+        return getC(ptr, side);
 }
 
 static node* getG(const char *expression) {

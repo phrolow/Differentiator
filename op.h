@@ -80,7 +80,31 @@ DEF_CMD(DIV, 4, "/", {
 })
 
 DEF_CMD(POW, 5, "^", {
-    printf("huipizda");
+    node *mul = (node*) malloc(sizeof(node));
+    NodeCtor(mul, nod->parent, OP, {.op = MUL}, nod->side);
+    nod->parent->children[nod->side] = mul;
+
+    nod->side = LEFT;
+    NodeConnect(mul, nod);
+
+    rch = (node*) malloc(sizeof(node));
+    NodeCtor(rch, mul, OP, {.op = MUL}, RIGHT);
+
+    node *fcpy = NodeCopy(nod->children[LEFT]);
+    fcpy->side = LEFT;
+    NodeConnect(rch, fcpy);
+
+    node *ln = (node*) malloc(sizeof(node));
+    NodeCtor(ln, rch, OP, {.op = LN}, RIGHT);
+
+    node *gcpy = NodeCopy(nod->children[RIGHT]);
+    gcpy->side = LEFT;
+    NodeConnect(ln, gcpy);
+
+    node *empty = (node*) malloc(sizeof(node));
+    NodeCtor(empty, ln, NOT_DEFINED, {.no_val = NULL}, RIGHT);
+
+    diff(rch);
 })
 
 DEF_CMD(SIN, 6, "sin", {
