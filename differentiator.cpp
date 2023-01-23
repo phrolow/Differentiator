@@ -1,7 +1,7 @@
 #include "differentiator.h"
 #define COMMA ,
 
-#define DEF_CMD(name, num, ...) \
+#define DEF_CMD(name, num, sign, ...) \
     case name:                      \
         __VA_ARGS__                 \
         break;
@@ -16,6 +16,8 @@ static void diff(node *nod) {
     }
 
     switch (nod->type) {
+        case MATH_CONST:
+            nod->type = CONST;
         case CONST:
             nod->value.val = 0;
             break;
