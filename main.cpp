@@ -12,20 +12,23 @@ int main(int argc, char **argv) {
     }
 
     tree *expression;
+    FILE *tex = NULL;
+
+    TexInit(tex);
 
     struct text txt = textFromFile(argv[1]);
 
     expression = ReadExpression(txt.content);
 
-//    Diff(expression);
+    //PrintExpression(expression);
 
-//    Simplify(&expression);
+    expression->root = Diff(expression);
 
-//    CalcConst(&expression);
+    Simplify(expression);
 
     TreeDump(expression);
 
-//    PrintExpression(&res);
+//    PrintExpression(expression);
 
     TreeDtor(expression);
 

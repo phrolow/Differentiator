@@ -69,7 +69,7 @@ static node* getC(const char **ptr, side side) {
         return getV(ptr, side);
 
     node *nod = (node*) malloc(sizeof(node));
-    NodeCtor(nod, NULL, MATH_CONST, {.m = m}, side);
+    NodeCtor(nod, NULL, MATH_CONST, {.math_const = m}, side);
 
     return nod;
 }

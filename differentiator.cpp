@@ -6,13 +6,9 @@
         __VA_ARGS__                 \
         break;
 
-static void diff(node *nod) {
-    node    *old = nod,
-            *rch = NULL,
-            *lch = NULL;
-
+static node* diff(node *nod) {
     if(!nod) {
-        return;
+        return NULL;
     }
 
     switch (nod->type) {
@@ -36,10 +32,12 @@ static void diff(node *nod) {
         default:
             break;
     }
+
+    return nod;
 }
 
-void Diff(tree *expression) {
+node* Diff(tree *expression) {
     TreeVerify(expression);
 
-    diff(expression->root);
+    return diff(expression->root);
 }

@@ -16,7 +16,10 @@ static void PrintNode(const node *node, const size_t *nNode, const char color[CO
 
     fprintf(fp, "\tnode%lu [fillcolor=\"%s\", ", *nNode, color);
 
-    fprintf(fp, "label=\"%d %d\"", node->type, node->value);
+    if(node->type == CONST || node->type == MATH_CONST)
+        fprintf(fp, "label=\"%d %lg\"", node->type, node->value);
+    else
+        fprintf(fp, "label=\"%d %d\"", node->type, node->value);
     fprintf(fp, "];\n");
 
     return;

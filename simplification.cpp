@@ -7,11 +7,9 @@ void Simplify(tree *expression) {
 }
 
 static void calcnode(node *nod) {
-    PRINT(nod);
-
-    int a = nod->children[LEFT]->value.val,
-        b = nod->children[RIGHT]->value.val,
-        res = 0;
+   double   a = nod->children[LEFT]->value.val,
+            b = nod->children[RIGHT]->value.val,
+            res = 0;
 
     switch (nod->value.op) {
         case ADD:
@@ -26,9 +24,11 @@ static void calcnode(node *nod) {
         case DIV:
             res = a / b;
             break;
-        default:
-            res = WRONG;
+        case POW:
+            res = pow(a, b);
             break;
+        default:
+            return;
     }
 
     NodeDtor(nod->children[0]);
@@ -42,7 +42,7 @@ static int calcconst(node *nod) {
     if(nod->type == CONST)
         return 1;
 
-    if(nod->type == VAR)
+    if(nod->type == VAR || nod->type == MATH_CONST || nod->type == NOT_DEFINED)
         return 0;
 
     if(calcconst(nod->children[0]) * calcconst(nod->children[1])) {
@@ -89,7 +89,7 @@ int FixMul0(node *node) {
         return 0;
 
     for(int i = 0; i < 2; i++) {
-        if(node->children[i]->type == CONST && node->children[i]->value.val == 0) {
+        if(node->children[i]->type == CONST && node->children[i]->value.val == 0 && node->side != ROOT) {
             SubTreeDtor(node->children[!i]);
             NodeDtor(node->children[i]);
 
@@ -108,7 +108,7 @@ int FixMul1(node *node) {
         return 0;
 
     for(int i = 0; i < 2; i++) {
-        if(node->children[i]->type == CONST && node->children[i]->value.val == 1) {
+        if(node->children[i]->type == CONST && node->children[i]->value.val == 1 && node->side != ROOT) {
             node->children[!i]->parent = node->parent;
             node->parent->children[node->side] = node->children[!i];
             node->children[!i]->side = node->side;
@@ -131,10 +131,9 @@ int FixAdd0(node *node) {
 
 
     for(int i = 0; i < 2; i++) {
-        if(node->children[i]->type == CONST && node->children[i]->value.val == 0) {
-            node->children[!i]->parent = node->parent;
-            node->parent->children[node->side] = node->children[!i];
+        if(node->children[i]->type == CONST && node->children[i]->value.val == 0 && node->side != ROOT) { //с корнем пофикшу но потом
             node->children[!i]->side = node->side;
+            NodeConnect(node->parent, node->children[!i]);
 
             node->parent = NULL;
 
@@ -153,7 +152,7 @@ int FixSub0(node *node) {
         return 0;
 
 
-    if(node->children[1]->type == CONST && node->children[1]->value.val == 0) {
+    if(node->children[1]->type == CONST && node->children[1]->value.val == 0 && node->side != ROOT) {
         node->children[0]->parent = node->parent;
         node->parent->children[node->side] = node->children[0];
         node->children[0]->side = node->side;
@@ -190,7 +189,7 @@ int CheckDiv0(node *node) {
     if(node->value.op != DIV || !CheckChildren(node))
         return 0;
 
-    if(node->children[RIGHT]->type == CONST && node->children[RIGHT]->value.val == 0) {
+    if(node->children[RIGHT]->type == CONST && node->children[RIGHT]->value.val == 0 && node->side != ROOT) {
         return 1;
     }
 

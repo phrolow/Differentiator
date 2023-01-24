@@ -14,6 +14,8 @@
 
 #define DEF_CMD(name, num, sign, ...) name = num,
 
+const size_t BUFSIZE = 0x100;
+
 typedef enum OP {
     #include "op.h"
 } op;
@@ -42,9 +44,9 @@ typedef enum SIDE {
 
 union value {
     op op;
-    double val;
+    int val;
     char name;
-    mconst m;
+    mconst math_const;
     void* no_val;
 };
 
@@ -115,7 +117,7 @@ int streq(const char *txt, const char *str);
 
 tree * ReadExpression(const char *txt);
 
-void Diff(tree *expression);
+node* Diff(tree *expression);
 
 void PrintExpression(tree *expression);
 
@@ -136,6 +138,8 @@ int FixSub0(node *node);
 int Fix0Div(node *node);
 
 int CheckDiv0(node *node);
+
+int TexInit(FILE *tex);
 
 #ifdef DEBUG
 

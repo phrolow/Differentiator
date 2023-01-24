@@ -12,9 +12,6 @@ int NodeCtor(node *new_node, node *parent, type node_type, value node_value, sid
 }
 
 void NodeDtor(node *nod) {
-//    PRINT(nod);
-    assert(nod);
-
     if(nod->parent)
         nod->parent->children[nod->side] = NULL;
 
@@ -40,10 +37,10 @@ static node *nodcpy(const node *orig, node *parent) {
 
     NodeCtor(nod, parent, orig->type, orig->value, orig->side);
 
-    if(orig->children[0]) {
+    if(orig->children[LEFT])
         nod->children[LEFT] = nodcpy(orig->children[LEFT], nod);
+    if(orig->children[RIGHT])
         nod->children[RIGHT] = nodcpy(orig->children[RIGHT], nod);
-    }
 
     return nod;
 }
@@ -64,5 +61,7 @@ int CheckChildren(const node *nod) {
 
 void NodeConnect(node *parent, node *child) {
     child->parent = parent;
-    parent->children[child->side] = child;
+
+    if(parent)
+        parent->children[child->side] = child;
 }
