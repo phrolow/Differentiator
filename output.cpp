@@ -2,12 +2,15 @@
 
 #define TEX(str) fprintf(tex, str)
 
-int TexInit(FILE *tex) {
-    tex = fopen("output.tex", "w");
+void TexInit(FILE *tex) {
+    if(!tex) {
+        fprintf(stderr, "TEX: file didn't open");
+    }
 
     TEX("\\input{header.tex}     \n\n");
     TEX("\\usepackage{upgreek} \n\n\n");
     TEX("\\begin{document}     \n\n\n");
+    TEX("$\\left( ");
 }
 
 static const char* GetOpFormat(op op) {
@@ -15,27 +18,56 @@ static const char* GetOpFormat(op op) {
 
     switch (op) {
         case ADD:
-            format = "%s + %s";
+            format = "%s + %s ";
             break;
         case SUB:
-            format = "%s - %s";
+            format = "%s - %s ";
             break;
         case MUL:
-            format = "%s %s";
+            format = "%s %s ";
             break;
         case DIV:
-            format = "\frac{%s}{%s}";
+            format = "\\frac{ %s } { %s } ";
             break;
         case POW:
-            format = "{%s}^{%s}";
+            format = "{ %s }^{ %s } ";
             break;
         case SIN:
-            format = "sin(%s)";
+            format = "sin \\left( %s \\right) ";
+            break;
+        case COS:
+            format = "cos \\left( %s \\right) ";
+            break;
+        case LN:
+            format = "ln \\left( %s \\right) ";
+            break;
+        default:
+            fprintf(stderr, "TEX: unknown operation");
+            format = "";
             break;
     }
+
+    return format;
+}
+
+static const char *GetMathConst(mconst m) {
+    const char *math_const = NULL;
+
+    switch(m) {
+        case E:
+            math_const = " e ";
+            break;
+        case PI:
+            math_const = " \\pi ";
+            break;
+    }
+
+    return math_const;
 }
 
 static char* PrintNode(node *nod) {
+    assert(nod);
+
     char *tex = (char*) calloc(BUFSIZE, sizeof(char));
 
     char    *left = NULL,
@@ -68,8 +100,17 @@ static char* PrintNode(node *nod) {
     return tex;
 }
 
-void PrintExpression(tree *expression) {
-    FILE *tex = fopen("output.tex", "w");
+void PrintExpression(tree *expression, FILE *tex) {
+    assert(expression);
+    assert(tex);
 
+    fputs(PrintNode(expression->root), tex);
+}
 
+void TexFinish(FILE *tex) {
+    assert(tex);
+
+    fprintf(tex, "$\n \\end{document}");
+
+    fclose(tex);
 }

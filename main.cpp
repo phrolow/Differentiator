@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     }
 
     tree *expression;
-    FILE *tex = NULL;
+    FILE *tex  = fopen("output.tex", "w");;
 
     TexInit(tex);
 
@@ -20,15 +20,19 @@ int main(int argc, char **argv) {
 
     expression = ReadExpression(txt.content);
 
-    //PrintExpression(expression);
+    PrintExpression(expression, tex);
+
+    fprintf(tex, "\\right) ' = ");
 
     expression->root = Diff(expression);
 
-    Simplify(expression);
+//    Simplify(expression);
 
     TreeDump(expression);
 
-//    PrintExpression(expression);
+    PrintExpression(expression, tex);
+
+    TexFinish(tex);
 
     TreeDtor(expression);
 

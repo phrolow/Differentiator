@@ -14,8 +14,6 @@
 
 #define DEF_CMD(name, num, sign, ...) name = num,
 
-const size_t BUFSIZE = 0x100;
-
 typedef enum OP {
     #include "op.h"
 } op;
@@ -119,8 +117,6 @@ tree * ReadExpression(const char *txt);
 
 node* Diff(tree *expression);
 
-void PrintExpression(tree *expression);
-
 void Simplify(tree *expression);
 
 int CalcConst(tree *expression);
@@ -139,7 +135,11 @@ int Fix0Div(node *node);
 
 int CheckDiv0(node *node);
 
-int TexInit(FILE *tex);
+void TexInit(FILE *tex);
+
+void PrintExpression(tree *expression, FILE *tex);
+
+void TexFinish(FILE *tex);
 
 #ifdef DEBUG
 

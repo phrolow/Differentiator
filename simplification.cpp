@@ -7,7 +7,7 @@ void Simplify(tree *expression) {
 }
 
 static void calcnode(node *nod) {
-   double   a = nod->children[LEFT]->value.val,
+   int      a = nod->children[LEFT]->value.val,
             b = nod->children[RIGHT]->value.val,
             res = 0;
 
