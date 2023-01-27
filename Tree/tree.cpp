@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 void TreeCtor(tree *tree, node *root) {
     tree->root = root;

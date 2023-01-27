@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 int NodeCtor(node *new_node, node *parent, type node_type, value node_value, side side) {
     new_node->parent = parent;

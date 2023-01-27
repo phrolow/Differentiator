@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 #define COMMA ,
 
 #define DEF_CMD(name, num, sign, ...) \
@@ -23,8 +23,9 @@ static node* diff(node *nod) {
             break;
         case OP:
             switch (nod->value.op) {
-                #include "op.h"
-                #undef DEF_CMD
+                #include "../op.h"
+
+#undef DEF_CMD
                 default:
                     break;
             }

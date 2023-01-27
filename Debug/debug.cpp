@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 #define CHECK(cond, err, msg)   \
     if(!(cond)) {                  \

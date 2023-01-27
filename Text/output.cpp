@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 #define TEX(str) fprintf(tex, str)
 

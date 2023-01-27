@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 #define DEF_CMD(name, num, sign, ...)   \
     if(streq(*ptr, sign)) {             \
@@ -79,7 +79,8 @@ static node* getF(const char **ptr, side side) {
 
     op op = WTF;
 
-    #include "op.h"
+    #include "../op.h"
+
         ;
     #undef DEF_CMD
 

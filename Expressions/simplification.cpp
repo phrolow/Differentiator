@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 void Simplify(tree *expression) {
     TreeVerify(expression);

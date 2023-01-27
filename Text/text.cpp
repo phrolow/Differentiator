@@ -1,4 +1,4 @@
-#include "differentiator.h"
+#include "../differentiator.h"
 
 struct text maketext(char *content, char **ptrs, size_t nChar, size_t nLine, size_t maxLine) {
     struct text newText = { NULL, NULL, 0, 0, 0 };
