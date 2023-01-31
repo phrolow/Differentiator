@@ -125,11 +125,11 @@ int NeutralElems(tree *expression);
 
 int FixMul0(node *node);
 
-int FixMul1(node *node);
+int FixMul1(node **nod);
 
-int FixAdd0(node *node);
+int FixAdd0(node **node);
 
-int FixSub0(node *node);
+int FixSub0(node **node);
 
 int Fix0Div(node *node);
 

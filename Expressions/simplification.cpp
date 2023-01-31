@@ -71,9 +71,9 @@ static int neutr_elts(node *nod) {
     }
 
     return FixMul0(nod)
-        || FixMul1(nod)
-        || FixAdd0(nod)
-        || FixSub0(nod)
+        || FixMul1(&nod)
+        || FixAdd0(&nod)
+        || FixSub0(&nod)
         || Fix0Div(nod)
         || neutr_elts(nod->children[LEFT]) + neutr_elts(nod->children[RIGHT]);
 }
@@ -103,20 +103,26 @@ int FixMul0(node *node) {
     return 0;
 }
 
-int FixMul1(node *node) {
-    if(node->value.op != MUL)
+int FixMul1(node **nod) {
+    assert(nod && *nod);
+
+    if((*nod)->value.op != MUL)
         return 0;
 
     for(int i = 0; i < 2; i++) {
-        if(node->children[i]->type == CONST && node->children[i]->value.val == 1 && node->side != ROOT) {
-            node->children[!i]->parent = node->parent;
-            node->parent->children[node->side] = node->children[!i];
-            node->children[!i]->side = node->side;
+        if((*nod)->children[i]->type == CONST && (*nod)->children[i]->value.val == 1 && (*nod)->side != ROOT) {
+            node * other_child = (*nod)->children[!i];
 
-            node->parent = NULL;
+            other_child->parent = (*nod)->parent;
+            (*nod)->parent->children[(*nod)->side] = other_child;
+            other_child->side = (*nod)->side;
 
-            NodeDtor(node->children[i]);
-            NodeDtor(node);
+            (*nod)->parent = NULL;
+
+            NodeDtor((*nod)->children[i]);
+            NodeDtor((*nod));
+
+            *nod = other_child;
 
             return 1;
         }
@@ -125,20 +131,26 @@ int FixMul1(node *node) {
     return 0;
 }
 
-int FixAdd0(node *node) {
-    if(node->value.op != ADD)
+int FixAdd0(node **nod) {
+    assert(nod && *nod);
+
+    if((*nod)->value.op != ADD)
         return 0;
 
-
     for(int i = 0; i < 2; i++) {
-        if(node->children[i]->type == CONST && node->children[i]->value.val == 0 && node->side != ROOT) { //с корнем пофикшу но потом
-            node->children[!i]->side = node->side;
-            NodeConnect(node->parent, node->children[!i]);
+        if((*nod)->children[i]->type == CONST && (*nod)->children[i]->value.val == 1 && (*nod)->side != ROOT) {
+            node * other_child = (*nod)->children[!i];
 
-            node->parent = NULL;
+            other_child->parent = (*nod)->parent;
+            (*nod)->parent->children[(*nod)->side] = other_child;
+            other_child->side = (*nod)->side;
 
-            NodeDtor(node->children[i]);
-            NodeDtor(node);
+            (*nod)->parent = NULL;
+
+            NodeDtor((*nod)->children[i]);
+            NodeDtor((*nod));
+
+            *nod = other_child;
 
             return 1;
         }
@@ -147,22 +159,30 @@ int FixAdd0(node *node) {
     return 0;
 }
 
-int FixSub0(node *node) {
-    if(node->value.op != SUB)
+int FixSub0(node **nod) {
+    assert(nod && *nod);
+
+    if((*nod)->value.op != SUB)
         return 0;
 
 
-    if(node->children[1]->type == CONST && node->children[1]->value.val == 0 && node->side != ROOT) {
-        node->children[0]->parent = node->parent;
-        node->parent->children[node->side] = node->children[0];
-        node->children[0]->side = node->side;
+    for(int i = 0; i < 2; i++) {
+        if((*nod)->children[i]->type == CONST && (*nod)->children[i]->value.val == 1 && (*nod)->side != ROOT) {
+            node * other_child = (*nod)->children[!i];
 
-        node->parent = NULL;
+            other_child->parent = (*nod)->parent;
+            (*nod)->parent->children[(*nod)->side] = other_child;
+            other_child->side = (*nod)->side;
 
-        NodeDtor(node->children[1]);
-        NodeDtor(node);
+            (*nod)->parent = NULL;
 
-        return 1;
+            NodeDtor((*nod)->children[i]);
+            NodeDtor((*nod));
+
+            *nod = other_child;
+
+            return 1;
+        }
     }
 
     return 0;

@@ -34,7 +34,7 @@ static void PrintNode(const node *node, const size_t *nNode, const char color[CO
     else if(node->type == VAR)
         fprintf(fp, "label=\"x\"");
     else
-        fprintf(fp, "label=\"Chto\"");
+        fprintf(fp, "label=\" \"");
     fprintf(fp, "];\n");
 
     return;
