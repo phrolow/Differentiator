@@ -3,6 +3,4 @@ project(Differentiator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-SET(CMAKE_CXX_FLAGS  "-O0")
-
 add_executable(Differentiator main.cpp Tree/tree.cpp Tree/node.cpp Text/text.cpp Expressions/differentiator.cpp Text/reader.cpp Debug/debug.cpp Expressions/simplification.cpp Text/output.cpp)

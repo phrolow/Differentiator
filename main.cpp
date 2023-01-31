@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
     expression->root = Diff(expression);
 
-//    Simplify(expression);
+    Simplify(expression);
 
     TreeDump(expression);
 

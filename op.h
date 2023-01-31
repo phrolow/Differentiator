@@ -119,7 +119,7 @@ DEF_CMD(SIN, 6, "sin", {
 
     right = NodeCopy(nod->children[LEFT]);
     right->side = RIGHT;
-    NodeConnect(top_mul COMMA nod = top_mul);
+    NodeConnect(top_mul COMMA right);
 
     nod = top_mul;
 

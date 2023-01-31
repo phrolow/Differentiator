@@ -6,6 +6,10 @@
         return err;             \
     }
 
+#define DEF_CMD(name, num, sign, ...)       \
+    case name:                              \
+        fprintf(fp, "label=\"%s\"", sign);  \
+        break;
 
 int NodeVerify(node *node) {
     return TREE_OK;
@@ -17,9 +21,20 @@ static void PrintNode(const node *node, const size_t *nNode, const char color[CO
     fprintf(fp, "\tnode%lu [fillcolor=\"%s\", ", *nNode, color);
 
     if(node->type == CONST || node->type == MATH_CONST)
-        fprintf(fp, "label=\"%d %lg\"", node->type, node->value);
+        fprintf(fp, "label=\"%d\"", node->value);
+    else if(node->type == OP)
+        switch(node->value.op) {
+#include "../op.h"
+
+#undef DEF_CMD
+            default:
+                fprintf(fp, "label=\"PIZDA\"", node->type, node->value);
+                break;
+        }
+    else if(node->type == VAR)
+        fprintf(fp, "label=\"x\"");
     else
-        fprintf(fp, "label=\"%d %d\"", node->type, node->value);
+        fprintf(fp, "label=\"Chto\"");
     fprintf(fp, "];\n");
 
     return;

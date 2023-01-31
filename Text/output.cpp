@@ -66,8 +66,6 @@ static const char *GetMathConst(mconst m) {
 }
 
 static char* PrintNode(node *nod) {
-    assert(nod);
-
     char *tex = (char*) calloc(BUFSIZE, sizeof(char));
 
     char    *left = NULL,
@@ -75,8 +73,10 @@ static char* PrintNode(node *nod) {
 
     switch (nod->type) {
         case OP:
-            left = PrintNode(nod->children[LEFT]);
-            right = PrintNode(nod->children[RIGHT]);
+            if(nod->children[LEFT])
+                left = PrintNode(nod->children[LEFT]);
+            if(nod->children[RIGHT])
+                right = PrintNode(nod->children[RIGHT]);
 
             sprintf(tex, GetOpFormat(nod->value.op), left, right);
 

@@ -19,7 +19,7 @@ static node* getN(const char **ptr, side side) {
 
     if(!isdigit(**ptr)) KILL
 
-    double val = 0;
+    int val = 0;
     node *newnode = (node*) malloc(sizeof(node));
 
     while(isdigit(**ptr)) {
@@ -29,8 +29,6 @@ static node* getN(const char **ptr, side side) {
     }
 
     NodeCtor(newnode, NULL, CONST, {.val = val}, side);
-
-    printf("%lg\n", newnode->value.val);
 
     return newnode;
 }
