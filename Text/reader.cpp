@@ -209,7 +209,7 @@ static node* getG(const char *expression) {
 
     const char **ptr = &expression;
 
-    node *root = getE(ptr, ROOT);
+    node *root = getE(ptr, LEFT);
     assert(root);
 
     if(*expression != '\0') KILL

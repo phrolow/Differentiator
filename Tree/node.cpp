@@ -12,6 +12,11 @@ int NodeCtor(node *new_node, node *parent, type node_type, value node_value, sid
 }
 
 void NodeDtor(node *nod) {
+    //assert(nod);
+
+    printf("DTOR says:\n");
+    PRINT(nod);
+
     if(nod->parent)
         nod->parent->children[nod->side] = NULL;
 
