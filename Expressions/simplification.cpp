@@ -57,8 +57,7 @@ static int calcconst(node *nod) {
 int CalcConst(tree *expression) {
     TreeVerify(expression);
 
-    //return calcconst(expression->root);
-    return 0;
+    return calcconst(expression->root->children[LEFT]);
 }
 
 static int neutr_elts(node *nod) {
@@ -91,7 +90,7 @@ static int neutr_elts(node *nod) {
 int NeutralElems(tree *expression) {
     TreeVerify(expression);
 
-    return neutr_elts(expression->root);
+    return neutr_elts(expression->root->children[LEFT]);
 }
 
 int FixMul0(node *node) {

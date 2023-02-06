@@ -24,11 +24,11 @@ int main(int argc, char **argv) {
 
     fprintf(tex, "\\right) ' = ");
 
-    expression->root = Diff(expression);
-
-    TreeDump(expression);
+    expression->root->children[LEFT] = Diff(expression);
 
     Simplify(expression);
+
+    TreeDump(expression);
 
     PrintExpression(expression, tex);
 

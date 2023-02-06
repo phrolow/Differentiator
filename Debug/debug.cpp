@@ -71,10 +71,11 @@ static void nodedump(const node *node, size_t *nNode, FILE *fp) {
 
     size_t current_number_of_node = *nNode;
 
-    if (CheckChildren(node)) {
+    if (node->children[LEFT]) {
         PrintEdge(current_number_of_node, ++(*nNode), LEFT_COLOR, fp);
         nodedump(node->children[LEFT], nNode, fp);
-
+    }
+    if(node->children[RIGHT]) {
         PrintEdge(current_number_of_node, ++(*nNode), RIGHT_COLOR, fp);
         nodedump(node->children[RIGHT], nNode, fp);
     }
@@ -87,7 +88,7 @@ void TreeDump(tree *tree) {
     fputs("digraph structs {\n", fp);
     fputs("\tnode [color=black, shape=box, style=\"filled\"];\n", fp);
 
-    nodedump(tree->root, &nNode, fp);
+    nodedump(tree->root->children[LEFT], &nNode, fp);
 
     fputs("}\n", fp);
 

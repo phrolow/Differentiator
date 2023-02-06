@@ -40,5 +40,5 @@ static node* diff(node *nod) {
 node* Diff(tree *expression) {
     TreeVerify(expression);
 
-    return diff(expression->root);
+    return diff(expression->root->children[LEFT]);
 }

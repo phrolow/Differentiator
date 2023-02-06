@@ -6,7 +6,7 @@ void TreeCtor(tree *tree, node *root) {
 
     NodeConnect(root_node, root);
 
-    tree->root = root;
+    tree->root = root_node;
 }
 
 static void nodedtor_(node *node) {
